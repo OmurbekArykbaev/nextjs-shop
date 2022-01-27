@@ -11,8 +11,11 @@ import {
 import Layout from "../components/Layout"
 import NextLink from "next/link"
 import data from "../utils/data"
+import db from "../utils/db"
+import Product from "../models/Product"
 
-export default function Home() {
+export default function Home(props) {
+  const { products } = props
   return (
     <Layout>
       <div>
@@ -46,4 +49,15 @@ export default function Home() {
       </div>
     </Layout>
   )
+}
+
+export const getServerSideProps = async () => {
+  await db.connect()
+  const product = await Product.find({}).lean()
+  await db.disconnect()
+  return {
+    props: {
+      product: product.map(db.convertDocToObj),
+    },
+  }
 }
