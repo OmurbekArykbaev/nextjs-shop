@@ -13,15 +13,37 @@ import NextLink from "next/link"
 import data from "../utils/data"
 import db from "../utils/db"
 import Product from "../models/Product"
+import { useRouter } from "next/router"
+import { Store } from "../utils/Store"
+import { useContext } from "react"
+import axios from "axios"
 
-export default function Home(props) {
-  const { products } = props
+export default function Home({ product }) {
+  const router = useRouter()
+  const { state, dispatch } = useContext(Store)
+  console.log(product)
+
+  const addToCartHandler = async (product) => {
+    const existItem = state.cart.cartItems.find((x) => x._id === product._id)
+    const quantity = existItem ? existItem.quantity + 1 : 1
+
+    if (data.countInStock <= quantity) {
+      window.alert("Sorry, product is  out if stock")
+    }
+
+    dispatch({
+      type: "CART_ADD_ITEM",
+      payload: { ...product, quantity: 1 },
+    })
+
+    router.push("/cart")
+  }
   return (
     <Layout>
       <div>
         <h1>Products</h1>
         <Grid container spacing={3}>
-          {data.products.map((product) => (
+          {product.map((product) => (
             <Grid item md={4} key={product.name}>
               <Card>
                 <NextLink href={`/product/${product.slug}`} passHref>
@@ -38,8 +60,12 @@ export default function Home(props) {
                 </NextLink>
                 <CardActions>
                   <Typography>${product.price}</Typography>`
-                  <Button size="small" color="primary">
-                    Add to cart
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => addToCartHandler(product)}
+                  >
+                    Купить
                   </Button>
                 </CardActions>
               </Card>
