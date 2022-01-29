@@ -15,6 +15,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material"
+import dynamic from "next/dynamic"
 import React, { useContext } from "react"
 import Layout from "../components/Layout"
 import { Store } from "../utils/Store"
@@ -119,4 +120,4 @@ const CartScreen = () => {
   )
 }
 
-export default CartScreen
+export default dynamic(() => Promise.resolve(CartScreen), { ssr: false })
