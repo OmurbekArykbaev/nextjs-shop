@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 import Layout from "../../components/Layout"
 import NextLink from "next/link"
 import { Button, Grid, Link, List, ListItem, Typography } from "@mui/material"
@@ -6,14 +6,29 @@ import useStyles from "../../utils/styles"
 import Image from "next/image"
 import db from "../../utils/db"
 import Product from "../../models/Product"
+import axios from "axios"
+import { Store } from "../../utils/Store"
 
 const ProductScreen = (props) => {
   const { product } = props
+  const { dispatch } = useContext(Store)
   const classes = useStyles()
 
   if (!product) {
     return <div>Product Not Found</div>
   }
+
+  const addToCartHandler = async () => {
+    const { data } = await axios.get(`/api/products/${product._id}`)
+    if (data.countInStock <= 0) {
+      window.alert("Sorry, product is  out if stock")
+    }
+    dispatch({
+      type: "CART_ADD_ITEM",
+      payload: { ...product, quantity: 1 },
+    })
+  }
+
   return (
     <Layout title={product.name} description={product.description}>
       <div className={classes.section}>
@@ -82,7 +97,12 @@ const ProductScreen = (props) => {
               </ListItem>
 
               <ListItem>
-                <Button fullWidth variant="contained" color="primary">
+                <Button
+                  onClick={addToCartHandler}
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                >
                   Добавить в корзину
                 </Button>
               </ListItem>
