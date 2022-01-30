@@ -21,7 +21,6 @@ import axios from "axios"
 export default function Home({ product }) {
   const router = useRouter()
   const { state, dispatch } = useContext(Store)
-  console.log(product)
 
   const addToCartHandler = async (product) => {
     const existItem = state.cart.cartItems.find((x) => x._id === product._id)
