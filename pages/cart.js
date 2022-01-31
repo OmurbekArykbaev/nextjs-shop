@@ -16,7 +16,7 @@ import {
   Typography,
 } from "@mui/material"
 import dynamic from "next/dynamic"
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import Layout from "../components/Layout"
 import { Store } from "../utils/Store"
 import NextLink from "next/link"
@@ -26,21 +26,23 @@ import { useRouter } from "next/router"
 
 const CartScreen = () => {
   const router = useRouter()
+
   const { state, dispatch } = useContext(Store)
+  console.log(state)
   const {
     cart: { cartItems },
   } = state
 
-  const updateCartHandler = async (item, quan) => {
+  const updateCartHandler = async (item, quantity) => {
     const { data } = await axios.get(`/api/products/${item._id}`)
-    if (data.countInStock <= quan) {
+    console.log(quantity)
+    if (data.countInStock <= quantity) {
       window.alert("Sorry, product is  out if stock")
     }
     dispatch({
       type: "CART_ADD_ITEM",
       payload: { ...item, quantity },
     })
-    router.push("/cart")
   }
 
   const removeItemHandler = (item) => {
@@ -103,7 +105,7 @@ const CartScreen = () => {
                       <TableCell align="right">
                         <Select
                           value={item.quantity}
-                          onChange={() =>
+                          onChange={(e) =>
                             updateCartHandler(item, e.target.value)
                           }
                         >

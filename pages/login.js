@@ -6,16 +6,32 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
-import React from "react"
+import React, { useState } from "react"
 import Layout from "../components/Layout"
 import useStyles from "../utils/styles"
 import NextLink from "next/link"
+import axios from "axios"
 
 const login = () => {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
   const classes = useStyles()
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault()
+    try {
+      const { data } = await axios.post("/api/users/login", {
+        email,
+        password,
+      })
+      alert("Успешный вход")
+    } catch (error) {
+      alert(error.response.data ? error.response.data.message : error.message)
+    }
+  }
   return (
     <Layout title="Login">
-      <form className={classes.form}>
+      <form onSubmit={onSubmitHandler} className={classes.form}>
         <Typography component="h1">Вход</Typography>
         <List>
           <ListItem>
@@ -25,6 +41,7 @@ const login = () => {
               id="email"
               label="Email"
               inputProps={{ type: "email" }}
+              onChange={(e) => setEmail(e.target.value)}
             ></TextField>
           </ListItem>
           <ListItem>
@@ -33,7 +50,8 @@ const login = () => {
               fullWidth
               id="password"
               label="Password"
-              inputProps={{ type: "email" }}
+              inputProps={{ type: "password" }}
+              onChange={(e) => setPassword(e.target.value)}
             ></TextField>
           </ListItem>
           <ListItem>
