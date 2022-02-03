@@ -48,7 +48,7 @@ const login = () => {
       dispatch({ type: "USER_LOGIN", payload: data })
       Cookies.set("userInfo", data)
       router.push(redirect || "/")
-      alert("Успешный вход")
+      enqueueSnackbar("Успешный вход", { variant: "success" })
     } catch (error) {
       enqueueSnackbar(
         error.response.data ? error.response.data.message : error.message,

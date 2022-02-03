@@ -45,7 +45,7 @@ const register = () => {
   }) => {
     closeSnackbar()
     if (password !== confirmPassword) {
-      enqueueSnackbar("password don't match", { variant: "error" })
+      enqueueSnackbar("Пароли не совподают!", { variant: "error" })
       return
     }
     try {
@@ -59,7 +59,7 @@ const register = () => {
       Cookies.set("userInfo", data)
       router.push(redirect || "/")
 
-      alert("Успешный Регистрация")
+      enqueueSnackbar("Успешная регистрация", { variant: "success" })
     } catch (error) {
       enqueueSnackbar(
         error.response.data ? error.response.data.message : error.message
