@@ -8,18 +8,25 @@ import {
   ThemeProvider,
   Switch,
   Badge,
+  Button,
 } from "@mui/material"
+import Menu from "@mui/material/Menu"
+import MenuItem from "@mui/material/MenuItem"
 import Head from "next/head"
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import useStyles from "../utils/styles"
 import NextLink from "next/link"
 import { createTheme } from "@mui/material/styles"
 import { Store } from "../utils/Store"
 import Cookies from "js-cookie"
+import { useRouter } from "next/router"
 
 const Layout = ({ title, description, children }) => {
+  const router = useRouter()
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
   const { state, dispatch } = useContext(Store)
-  const { darkMode, cart } = state
+  const { darkMode, cart, userInfo } = state
   const darkModeChangeHandler = () => {
     dispatch({ type: darkMode ? "DARK_MODE_OFF" : "DARK_MODE_ON" })
     const newDarkMode = !darkMode
@@ -49,6 +56,20 @@ const Layout = ({ title, description, children }) => {
     },
   })
   const classes = useStyles()
+
+  const loginClickHandler = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+  const loginClickCloseHandler = () => {
+    setAnchorEl(null)
+  }
+  const logoutClickHandler = () => {
+    setAnchorEl(null)
+    dispatch({ type: "USER_LOGOUT" })
+    Cookies.remove("userInfo")
+    Cookies.remove("cartItems")
+    router.push("/")
+  }
   return (
     <div>
       <Head>
@@ -84,9 +105,41 @@ const Layout = ({ title, description, children }) => {
                   )}
                 </Link>
               </NextLink>
-              <NextLink href="/login" passHref>
-                <Link>Login</Link>
-              </NextLink>
+              {userInfo ? (
+                <>
+                  {" "}
+                  <Button
+                    id="basic-button"
+                    aria-controls={open ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={(event) => loginClickHandler(event)}
+                  >
+                    {userInfo.name}
+                  </Button>{" "}
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={loginClickCloseHandler}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
+                  >
+                    <MenuItem onClick={loginClickCloseHandler}>
+                      Profile
+                    </MenuItem>
+                    <MenuItem onClick={loginClickCloseHandler}>
+                      My account
+                    </MenuItem>
+                    <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>
+                  </Menu>
+                </>
+              ) : (
+                <NextLink href="/login" passHref>
+                  <Link>Login</Link>
+                </NextLink>
+              )}
             </div>
           </Toolbar>
         </AppBar>
