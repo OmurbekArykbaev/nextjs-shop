@@ -126,12 +126,6 @@ const Layout = ({ title, description, children }) => {
                       "aria-labelledby": "basic-button",
                     }}
                   >
-                    <MenuItem onClick={loginClickCloseHandler}>
-                      Profile
-                    </MenuItem>
-                    <MenuItem onClick={loginClickCloseHandler}>
-                      My account
-                    </MenuItem>
                     <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>
                   </Menu>
                 </>

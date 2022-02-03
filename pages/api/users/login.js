@@ -9,7 +9,7 @@ handler.post(async (req, res) => {
   await db.connect()
   const user = await User.findOne({ email: req.body.email })
   await db.disconnect()
-  if (user && req.body.password) {
+  if (user && req.body.password === user.password) {
     const token = signToken(user)
     res.send({
       token,
@@ -19,9 +19,7 @@ handler.post(async (req, res) => {
       isAdmin: user.isAdmin,
     })
   } else {
-    res
-      .statusCode(401)
-      .send({ message: "Неверный пароль, либо учетная запись" })
+    res.status(401).send({ message: "Неверный логин либо пароль!" })
   }
 })
 
