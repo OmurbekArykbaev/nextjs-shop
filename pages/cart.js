@@ -28,14 +28,14 @@ const CartScreen = () => {
   const router = useRouter()
 
   const { state, dispatch } = useContext(Store)
-  console.log(state)
+
   const {
     cart: { cartItems },
   } = state
 
   const updateCartHandler = async (item, quantity) => {
     const { data } = await axios.get(`/api/products/${item._id}`)
-    console.log(quantity)
+
     if (data.countInStock <= quantity) {
       window.alert("Sorry, product is  out if stock")
     }
@@ -65,8 +65,8 @@ const CartScreen = () => {
           </NextLink>
         </div>
       ) : (
-        <Grid container spacing={1}>
-          <Grid item md={9} xs={12}>
+        <Grid item={true} container spacing={1}>
+          <Grid md={9} xs={12}>
             <TableContainer>
               <Table>
                 <TableHead>

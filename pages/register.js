@@ -17,7 +17,7 @@ import Cookies from "js-cookie"
 import { Controller, useForm } from "react-hook-form"
 import { useSnackbar } from "notistack"
 
-const register = () => {
+const Register = () => {
   const {
     handleSubmit,
     control,
@@ -33,7 +33,7 @@ const register = () => {
     if (userInfo) {
       router.push("/")
     }
-  }, [])
+  }, [router, userInfo])
 
   const classes = useStyles()
 
@@ -205,4 +205,4 @@ const register = () => {
   )
 }
 
-export default register
+export default Register

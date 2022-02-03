@@ -26,7 +26,7 @@ const ProductScreen = (props) => {
     const { data } = await axios.get(`/api/products/${product._id}`)
     console.log(data)
     if (data.countInStock <= quantity) {
-      window.alert("Sorry, product is  out if stock")
+      window.alert("Проси прозения товара нет в наличии")
     }
 
     dispatch({
